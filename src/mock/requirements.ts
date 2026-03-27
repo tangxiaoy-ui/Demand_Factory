@@ -106,33 +106,72 @@ export const mockRequirements: Requirement[] = [
   },
   {
     id: '4',
-    name: '企业OA系统',
+    name: '车辆管理系统',
     status: 'developing',
-    docContent: `# 企业OA系统需求文档
+    docContent: `# 车辆管理系统需求文档
 
 ## 项目概述
-企业内部办公自动化系统，包含审批流程、日程管理、公告通知、文档管理等模块。
+为企业提供全面的车辆管理解决方案，实现车辆信息管理、调度派车、维修保养、违章记录、费用统计等一体化管理。
 
 ## 目标用户
-- 企业员工
-- 部门经理
-- 行政人员
-- 高层管理者
+- 物流企业
+- 运输公司
+- 企业车队
+- 车辆管理员
+- 司机
 
 ## 核心功能
-1. 审批流程管理
-2. 日程安排
-3. 公告通知
-4. 文档管理
-5. 通讯录
-6. 数据报表
+1. 车辆档案管理
+   - 车辆基本信息（品牌、型号、车牌、购买日期等）
+   - 车辆证件管理（行驶证、营运证、保险等）
+   - 车辆状态管理（在用、维修、停用等）
+
+2. 司机信息管理
+   - 司机基本信息
+   - 驾驶证管理
+   - 司机资质审核
+
+3. 调度派车管理
+   - 派车申请与审批
+   - 智能车辆调度
+   - 行程记录管理
+   - 回车登记
+
+4. GPS实时监控
+   - 车辆实时定位
+   - 轨迹回放
+   - 电子围栏
+   - 超速报警
+
+5. 维修保养管理
+   - 保养计划提醒
+   - 维修记录管理
+   - 维修费用统计
+
+6. 违章事故管理
+   - 违章记录登记
+   - 事故处理流程
+   - 保险理赔管理
+
+7. 费用统计管理
+   - 油耗管理
+   - 路桥费
+   - 维修保养费
+   - 保险费用
+   - 年检费用
+
+## 技术要求
+- 支持GPS北斗双模定位
+- 移动端APP支持
+- 数据实时同步
+- 系统响应时间<2秒
 `,
     pptUrl: '/mock/ppt2.pptx',
     prototypeUrl: '/mock/prototype2',
     createdAt: '2024-02-01T09:00:00Z',
     updatedAt: '2024-02-10T14:00:00Z',
     userId: 'user1',
-    customer: '华泰制造集团',
+    customer: '速达物流有限公司',
     submitter: '刘芳',
   },
   {
@@ -261,8 +300,8 @@ export const mockAttachments: Attachment[] = [
   {
     id: 'a10',
     requirementId: '4',
-    fileName: 'OA系统启动会议纪要.md',
-    fileUrl: '/mock/attachments/oa-meeting1.md',
+    fileName: '车辆管理系统启动会议纪要.md',
+    fileUrl: '/mock/attachments/vehicle-meeting1.md',
     fileType: 'document',
     category: 'meeting_minutes',
     uploadedAt: '2024-02-02T09:00:00Z',
@@ -270,8 +309,8 @@ export const mockAttachments: Attachment[] = [
   {
     id: 'a11',
     requirementId: '4',
-    fileName: '钉钉产品参考.png',
-    fileUrl: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=800',
+    fileName: 'G7物联网平台参考.png',
+    fileUrl: 'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=800',
     fileType: 'image',
     category: 'website_screenshot',
     uploadedAt: '2024-02-03T14:00:00Z',
@@ -279,8 +318,8 @@ export const mockAttachments: Attachment[] = [
   {
     id: 'a12',
     requirementId: '4',
-    fileName: '企业微信产品参考.png',
-    fileUrl: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800',
+    fileName: 'oTMS运输管理系统参考.png',
+    fileUrl: 'https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=800',
     fileType: 'image',
     category: 'website_screenshot',
     uploadedAt: '2024-02-03T14:30:00Z',

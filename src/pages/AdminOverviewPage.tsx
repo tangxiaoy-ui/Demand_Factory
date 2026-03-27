@@ -18,13 +18,13 @@ export function AdminOverviewPage() {
 
   const stats = {
     total: requirements.length,
-    draft: requirements.filter(r => r.status === 'draft').length,
-    inProgress: requirements.filter(r => ['confirmed', 'submitted', 'developing'].includes(r.status)).length,
+    submitted: requirements.filter(r => r.status === 'submitted').length,
+    developing: requirements.filter(r => r.status === 'developing').length,
     completed: requirements.filter(r => r.status === 'completed').length,
   }
 
   const statusDistribution = [
-    { name: '草稿', value: stats.draft, color: STATUS_COLORS.draft },
+    { name: '草稿', value: requirements.filter(r => r.status === 'draft').length, color: STATUS_COLORS.draft },
     { name: '已确认', value: requirements.filter(r => r.status === 'confirmed').length, color: STATUS_COLORS.confirmed },
     { name: '已提交', value: requirements.filter(r => r.status === 'submitted').length, color: STATUS_COLORS.submitted },
     { name: '开发中', value: requirements.filter(r => r.status === 'developing').length, color: STATUS_COLORS.developing },
@@ -86,11 +86,11 @@ export function AdminOverviewPage() {
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">草稿</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">{stats.draft}</p>
+                <p className="text-sm text-gray-500">待审需求</p>
+                <p className="text-3xl font-bold text-gray-900 mt-2">{stats.submitted}</p>
               </div>
-              <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center">
-                <Clock className="w-6 h-6 text-gray-600" />
+              <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
+                <Clock className="w-6 h-6 text-purple-600" />
               </div>
             </div>
           </Card>
@@ -98,8 +98,8 @@ export function AdminOverviewPage() {
           <Card className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-500">进行中</p>
-                <p className="text-3xl font-bold text-gray-900 mt-2">{stats.inProgress}</p>
+                <p className="text-sm text-gray-500">开发中需求</p>
+                <p className="text-3xl font-bold text-gray-900 mt-2">{stats.developing}</p>
               </div>
               <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
                 <AlertCircle className="w-6 h-6 text-orange-600" />
@@ -160,9 +160,9 @@ export function AdminOverviewPage() {
                 <Line 
                   type="monotone" 
                   dataKey="count" 
-                  stroke="#2b74e2" 
+                  stroke="#1A40C2" 
                   strokeWidth={2}
-                  dot={{ fill: '#2b74e2', r: 4 }}
+                  dot={{ fill: '#1A40C2', r: 4 }}
                   activeDot={{ r: 6 }}
                 />
               </LineChart>

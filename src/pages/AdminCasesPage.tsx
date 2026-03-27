@@ -63,7 +63,7 @@ export function AdminCasesPage() {
         <div className="w-[1200px] mx-auto">
           <div className="mb-6">
             <StatusTabs
-              title="案例展示管理"
+              title="案例管理"
               tabs={statusTabs}
               activeTab={statusFilter}
               onChange={(value) => setStatusFilter(value as typeof statusFilter)}

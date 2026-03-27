@@ -98,19 +98,19 @@ export const mockSessions: ChatSession[] = [
       {
         id: 'msg-3-1',
         role: 'user',
-        content: 'OA办公系统',
+        content: '车辆管理系统',
         timestamp: '2024-02-01T09:00:00Z',
       },
       {
         id: 'msg-3-2',
         role: 'assistant',
-        content: '• 收到，OA办公系统。\n\n• 请确认以下信息：\na. 企业规模和行业？\nb. 核心审批流程有哪些？\nc. 是否需要移动端？',
+        content: '• 收到，车辆管理系统。\n\n• 请确认以下信息：\na. 车辆规模和类型？\nb. 主要管理场景有哪些？\nc. 是否需要GPS定位和实时监控？',
         timestamp: '2024-02-01T09:01:00Z',
       },
       {
         id: 'msg-3-3',
         role: 'user',
-        content: '制造业，500人，需要请假、报销、采购审批流程，需要移动端',
+        content: '物流公司，200辆车，包括货车、面包车、轿车，需要车辆调度、维修保养、违章管理、GPS定位',
         timestamp: '2024-02-01T09:05:00Z',
       },
       {
@@ -124,7 +124,7 @@ export const mockSessions: ChatSession[] = [
     createdAt: '2024-02-01T09:00:00Z',
     updatedAt: '2024-02-01T09:15:00Z',
     userName: '刘芳',
-    summary: '企业OA系统需求收集',
+    summary: '车辆管理系统需求收集',
     artifacts: [
       { id: 'art-3-1', type: 'document', title: '需求文档' },
       { id: 'art-3-2', type: 'ppt', title: '方案PPT' },

@@ -7,20 +7,20 @@ interface PPTPreviewProps {
 const mockSlides = [
   {
     title: '项目概述',
-    content: '中国中药统一门户建设平台',
-    subtitle: '信息触达 · 日程办公 · 面向全体员工'
+    content: '企业车辆管理系统',
+    subtitle: '智能调度 · 实时监控 · 高效管理'
   },
   {
     title: '核心功能',
-    items: ['新闻发布', '公告通知', '日程管理', '待办待阅', '员工论坛']
+    items: ['车辆档案管理', '司机信息管理', '调度派车管理', 'GPS实时监控', '维修保养管理', '违章事故管理', '费用统计管理']
   },
   {
     title: '目标用户',
-    content: '全体员工'
+    content: '物流企业车队管理员 · 企业行政管理人员 · 调度中心操作员 · 司机及用车人员'
   },
   {
     title: '技术架构',
-    items: ['前端：React + TypeScript', '后端：Node.js', '数据库：PostgreSQL']
+    items: ['前端：React + TypeScript', '后端：Node.js / Java Spring Boot', '数据库：PostgreSQL / MySQL', '地图服务：高德/百度地图', 'GPS设备：北斗/GPS双模定位', '移动端：iOS/Android司机端APP']
   }
 ]
 

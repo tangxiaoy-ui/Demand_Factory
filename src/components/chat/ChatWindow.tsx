@@ -21,34 +21,34 @@ const mockStructuredResponses: Record<string, MessageWithMeta> = {
     message: {
       id: 'ai-analysis-1',
       role: 'assistant',
-      content: '• 收到，中国中药统一门户建设项目。\n\n• 先确认几个关键信息：\na. 门户定位：这个统一门户是面向内部员工（B2E）、还是面向外部客户/供应商（B2B/B2C）？还是内外一体化？\nb. 统一范围：需要整合哪些现有系统？（如OA、ERP、CRM、HR、财务、生产管理等）\nc. 核心场景：用户登录门户后，最常用的3个场景是什么？（如：审批待办、数据看板、业务申请、知识查询等）\nd. 组织规模：预计覆盖多少用户？是否涉及多子公司/多层级组织架构？\n\n• 另外，这个项目之前是否有历史需求文档或沟通记录？如果有，请发给我参考。',
+      content: '• 收到。看来我们要开始构建一个新的低代码模块了。\n\n• 请问你目前关注的是哪个业务领域？或者需要我为你提供一些应用场景的建议？',
       timestamp: new Date().toISOString(),
     },
     isStructuredAI: true,
-    analysisTitle: '门户需求解析',
-    progress: '分析进度20%',
+    analysisTitle: '车辆管理需求解析',
+    progress: '分析进度0%',
   },
   'ai-analysis-2': {
     message: {
       id: 'ai-analysis-2',
       role: 'assistant',
-      content: '• 收到，已了解门户定位和业务范围。\n\n• 基于您的描述，建议将门户定位如下：\na. 门户定位：内外一体化统一门户\nb. 统一范围：整合OA、ERP、CRM、HR、财务等核心业务系统\nc. 核心场景：审批待办、数据看板、业务申请\nd. 组织规模：覆盖5000+用户，涉及多层级组织架构\n\n• 接下来，请描述一下您期望的核心功能模块有哪些？（例如：单点登录、待办中心、数据看板、消息通知、个人工作台等）',
+      content: '• 明白。针对 B 端企业的车辆管理，我建议从以下逻辑划分：\n\n• 员工端（移动端为主）：\n  - 用车申请、我的行程、还车确认、报销申请（油费/路桥费）。\n\n• 管理端（PC端为主）：\n  - 车辆档案库、驾驶员管理、车辆实时状态监控、派车调度、保险/维保提醒。\n\n• 决策端：\n  - 车辆利用率报表、费用分析统计。',
       timestamp: new Date().toISOString(),
     },
     isStructuredAI: true,
-    analysisTitle: '门户需求解析',
-    progress: '分析进度50%',
+    analysisTitle: '车辆管理需求解析',
+    progress: '分析进度30%',
   },
   'ai-analysis-3': {
     message: {
       id: 'ai-analysis-3',
       role: 'assistant',
-      content: '• 收到，已记录核心功能需求。\n\n• 根据您的描述，识别出以下关键功能：\na. 统一认证：单点登录（SSO）、多因素认证\nb. 业务中心：审批待办、业务申请流程、知识查询\nc. 数据展示：个人工作台、数据看板、报表中心\nd. 协作功能：消息通知、日程管理、任务协作\n\n• 最后，请确认一下技术约束条件，例如：\na. 是否要求国产化适配（如华为云、达梦数据库）？\nb. 是否已有技术栈要求？\nc. 交付时间要求？',
+      content: '• 好的，这是为您设计的字段清单：\n\n• 车辆档案表：\n  - 车牌号（唯一）、车型、车架号、载人数、购入日期、所属部门、当前状态（空闲/使用中/维修中）、保险到期日。\n\n• 用车申请单：\n  - 申请人（关联用户）、用车部门、目的地、用车时间（起/止）、随行人数、申请理由、车辆类型要求、预估里程。',
       timestamp: new Date().toISOString(),
     },
     isStructuredAI: true,
-    analysisTitle: '门户需求解析',
-    progress: '分析进度70%',
+    analysisTitle: '车辆管理需求解析',
+    progress: '分析进度50%',
   },
   'ai-complete': {
     message: {

@@ -16,31 +16,85 @@ import type { Message } from '@/types'
 
 type PageState = 'initial' | 'chatting' | 'document'
 
-const sampleDocContent = `# 需求文档
+interface DocumentVersion {
+  version: string
+  docContent: string
+  confirmed: boolean
+  pptUrl?: string
+  prototypeUrl?: string
+  createdAt: number
+}
+
+const sampleDocContent = `# 车辆管理系统需求文档
 
 ## 项目概述
-基于对话收集的需求信息，自动生成的标准化需求文档。
+为企业提供全面的车辆管理解决方案，实现车辆信息管理、调度派车、维修保养、违章记录、费用统计等一体化管理。
 
 ## 目标用户
-- 企业用户
-- 个人开发者
-- 产品团队
+- 物流企业车队管理员
+- 企业行政管理人员
+- 调度中心操作员
+- 司机及用车人员
 
 ## 核心功能
-1. AI智能对话收集需求
-2. 自动生成需求文档
-3. 一键生成PPT演示
-4. 交互原型自动生成
+1. 车辆档案管理
+   - 车辆基本信息登记（车牌、车型、载重、购买日期等）
+   - 证件管理（行驶证、营运证、保险等）
+   - 车辆状态管理（在用、空闲、维修、报废等）
+   - 车辆档案查询与导出
+
+2. 司机信息管理
+   - 司机基本信息（姓名、联系方式、驾驶证等）
+   - 司机资质管理（驾龄、准驾车型、违章记录）
+   - 司机状态管理（在途、空闲、休息、请假）
+   - 司机绩效统计
+
+3. 调度派车管理
+   - 派车申请与审批流程
+   - 智能车辆匹配与调度
+   - 行程任务管理
+   - 回车登记与里程确认
+
+4. GPS实时监控
+   - 实时定位显示（地图展示）
+   - 轨迹回放查询
+   - 电子围栏设置与报警
+   - 超速、疲劳驾驶等异常报警
+
+5. 维修保养管理
+   - 保养计划制定与提醒
+   - 维修记录管理
+   - 维修费用统计
+   - 维修点/保养点管理
+
+6. 违章事故管理
+   - 违章记录登记
+   - 违章处理跟踪
+   - 事故记录与处理
+   - 违章统计分析
+
+7. 费用统计管理
+   - 油费、过路费、维修费等费用登记
+   - 费用分类统计与报表
+   - 单车成本核算
+   - 费用趋势分析
 
 ## 非功能需求
-- 响应时间 < 2秒
-- 支持并发用户数 > 100
+- 系统响应时间 < 2秒
+- 支持200辆车辆同时在线
+- GPS定位更新频率：10秒/次
+- 数据实时同步延迟 < 5秒
 - 系统可用性 99.9%
+- 支持7×24小时运行
 
 ## 技术约束
 - 前端：React + TypeScript
-- 后端：Node.js
-- 数据库：PostgreSQL
+- 后端：Node.js / Java Spring Boot
+- 数据库：PostgreSQL / MySQL
+- 地图服务：高德地图 API / 百度地图 API
+- GPS设备：支持北斗/GPS双模定位
+- 移动端：支持iOS/Android司机端APP
+- 消息推送：WebSocket实时推送
 `
 
 export function AICollectionPage() {
@@ -57,14 +111,37 @@ export function AICollectionPage() {
   const [pptGenerated, setPptGenerated] = useState(false)
   const [prototypeGenerated, setPrototypeGenerated] = useState(false)
   const [requirementConfirmed, setRequirementConfirmed] = useState(false)
+  const [docVersions, setDocVersions] = useState<DocumentVersion[]>([
+    {
+      version: 'V1.0',
+      docContent: sampleDocContent,
+      confirmed: false,
+      createdAt: Date.now()
+    }
+  ])
   const [selectedVersion, setSelectedVersion] = useState('V1.0')
-  const [docContent, setDocContent] = useState(sampleDocContent)
-  const [pptUrl, setPptUrl] = useState<string | undefined>()
-  const [prototypeUrl, setPrototypeUrl] = useState<string | undefined>()
   const [isHistorySession, setIsHistorySession] = useState(false)
+  const [isQuickEntry, setIsQuickEntry] = useState(false)
+  const [firstUserInput, setFirstUserInput] = useState('')
 
   const sessionId = searchParams.get('sessionId')
   const requirementId = searchParams.get('requirementId')
+
+  const currentVersion = docVersions.find(v => v.version === selectedVersion) || docVersions[0]
+
+  useEffect(() => {
+    if (currentVersion) {
+      setRequirementConfirmed(currentVersion.confirmed)
+      setPptGenerated(!!currentVersion.pptUrl)
+      setPrototypeGenerated(!!currentVersion.prototypeUrl)
+      if (!currentVersion.pptUrl && activeTab === 'ppt') {
+        setActiveTab('document')
+      }
+      if (!currentVersion.prototypeUrl && activeTab === 'prototype') {
+        setActiveTab('document')
+      }
+    }
+  }, [selectedVersion, currentVersion])
 
   const agentInfo = {
     name: '需求助手',
@@ -73,7 +150,7 @@ export function AICollectionPage() {
 
   const quickCategories = [
     { id: 'portal', name: '门户', icon: '🏢' },
-    { id: 'lowcode', name: '低代码', icon: '⚡' },
+    { id: 'lowcode', name: '低代码应用', icon: '⚡' },
     { id: 'workflow', name: '流程平台', icon: '🔄' },
     { id: 'collaboration', name: '协同应用', icon: '👥' },
     { id: 'aiagent', name: '智能体', icon: '🤖' },
@@ -108,23 +185,31 @@ export function AICollectionPage() {
     if (requirementId) {
       const requirement = requirements.find(r => r.id === requirementId)
       if (requirement) {
-        setDocContent(requirement.docContent || sampleDocContent)
+        setDocVersions([
+          {
+            version: 'V1.0',
+            docContent: requirement.docContent || sampleDocContent,
+            confirmed: requirement.status === 'confirmed',
+            pptUrl: requirement.pptUrl,
+            prototypeUrl: requirement.prototypeUrl,
+            createdAt: Date.now()
+          }
+        ])
         if (requirement.pptUrl) {
           setPptGenerated(true)
-          setPptUrl(requirement.pptUrl)
         }
         if (requirement.prototypeUrl) {
           setPrototypeGenerated(true)
-          setPrototypeUrl(requirement.prototypeUrl)
         }
       }
     }
   }, [sessionId, requirementId, sessions, requirements, setMessages, setProgress, setDocGenerated])
 
-  const handleStartChat = (quickCategory?: string) => {
+  const handleStartChat = (quickCategory?: string, firstMessage?: string) => {
     setPageState('chatting')
 
     if (quickCategory) {
+      setIsQuickEntry(true)
       const userMessage: Message = {
         id: `user-${Date.now()}`,
         role: 'user',
@@ -133,18 +218,45 @@ export function AICollectionPage() {
       }
       addMessage(userMessage)
 
-      setProgress(20)
+      setProgress(0)
       setCurrentStep(1)
 
       setTimeout(() => {
         const aiResponse: Message = {
           id: 'ai-analysis-1',
           role: 'assistant',
-          content: `• 收到，${quickCategory}。\n\n• 先确认几个关键信息：\na. 门户定位：这个统一门户是面向内部员工（B2E）、还是面向外部客户/供应商（B2B/B2C）？还是内外一体化？\nb. 统一范围：需要整合哪些现有系统？（如OA、ERP、CRM、HR、财务、生产管理等）\nc. 核心场景：用户登录门户后，最常用的3个场景是什么？（如：审批待办、数据看板、业务申请、知识查询等）\nd. 组织规模：预计覆盖多少用户？是否涉及多子公司/多层级组织架构？\n\n• 另外，这个项目之前是否有历史需求文档或沟通记录？如果有，请发给我参考。`,
+          content: `• 收到。看来我们要开始构建一个新的${quickCategory}模块了。\n\n• 请问你目前关注的是哪个业务领域？或者需要我为你提供一些应用场景的建议？`,
           timestamp: new Date().toISOString(),
         }
         addMessage(aiResponse)
       }, 500)
+    } else {
+      setIsQuickEntry(false)
+      if (firstMessage) {
+        setFirstUserInput(firstMessage)
+        const userMessage: Message = {
+          id: `user-${Date.now()}`,
+          role: 'user',
+          content: firstMessage,
+          timestamp: new Date().toISOString(),
+        }
+        addMessage(userMessage)
+
+        setProgress(0)
+        setCurrentStep(1)
+
+        setTimeout(() => {
+          const aiResponse: Message = {
+            id: 'ai-analysis-1',
+            role: 'assistant',
+            content: `• 收到。看来我们要开始构建一个新的${firstMessage}模块了。\n\n• 请问你目前关注的是哪个业务领域？或者需要我为你提供一些应用场景的建议？`,
+            timestamp: new Date().toISOString(),
+          }
+          addMessage(aiResponse)
+        }, 500)
+      } else {
+        setCurrentStep(1)
+      }
     }
   }
 
@@ -152,6 +264,25 @@ export function AICollectionPage() {
     if (pageState === 'initial') {
       handleStartChat()
       return
+    }
+
+    const confirmedVersion = docVersions.find(v => v.confirmed)
+    const isAfterConfirmation = !!confirmedVersion
+
+    if (isAfterConfirmation) {
+      const latestVersionNum = docVersions.length
+      const newVersion = `V${latestVersionNum + 1}.0`
+      const newDocVersion: DocumentVersion = {
+        version: newVersion,
+        docContent: sampleDocContent,
+        confirmed: false,
+        createdAt: Date.now()
+      }
+      setDocVersions(prev => [...prev, newDocVersion])
+      setSelectedVersion(newVersion)
+      setRequirementConfirmed(false)
+      setPptGenerated(false)
+      setPrototypeGenerated(false)
     }
 
     const userMessage: Message = {
@@ -165,8 +296,12 @@ export function AICollectionPage() {
     const nextStep = currentStep + 1
     setCurrentStep(nextStep)
 
-    const progressMap = [20, 50, 70, 90, 100]
+    const progressMap = [0, 30, 50, 70, 100]
     setProgress(progressMap[Math.min(nextStep, progressMap.length - 1)])
+
+    if (isQuickEntry && currentStep === 1 && !firstUserInput) {
+      setFirstUserInput(content)
+    }
 
     setTimeout(() => {
       let aiResponse: Message
@@ -175,21 +310,21 @@ export function AICollectionPage() {
         aiResponse = {
           id: 'ai-analysis-1',
           role: 'assistant',
-          content: `• 收到，${content}。\n\n• 先确认几个关键信息：\na. 门户定位：这个统一门户是面向内部员工（B2E）、还是面向外部客户/供应商（B2B/B2C）？还是内外一体化？\nb. 统一范围：需要整合哪些现有系统？（如OA、ERP、CRM、HR、财务、生产管理等）\nc. 核心场景：用户登录门户后，最常用的3个场景是什么？（如：审批待办、数据看板、业务申请、知识查询等）\nd. 组织规模：预计覆盖多少用户？是否涉及多子公司/多层级组织架构？\n\n• 另外，这个项目之前是否有历史需求文档或沟通记录？如果有，请发给我参考。`,
+          content: `• 收到。看来我们要开始构建一个新的${content}模块了。\n\n• 请问你目前关注的是哪个业务领域？或者需要我为你提供一些应用场景的建议？`,
           timestamp: new Date().toISOString(),
         }
       } else if (nextStep === 2) {
         aiResponse = {
           id: 'ai-analysis-2',
           role: 'assistant',
-          content: `• 收到，已了解门户定位和业务范围。\n\n• 基于您的描述，建议将门户定位如下：\na. 门户定位：内外一体化统一门户\nb. 统一范围：整合OA、ERP、CRM、HR、财务等核心业务系统\nc. 核心场景：审批待办、数据看板、业务申请\nd. 组织规模：覆盖5000+用户，涉及多层级组织架构\n\n• 接下来，请描述一下您期望的核心功能模块有哪些？（例如：单点登录、待办中心、数据看板、消息通知、个人工作台等）`,
+          content: `• 明白。针对 B 端企业的车辆管理，我建议从以下逻辑划分：\n\n• 员工端（移动端为主）：\n  - 用车申请、我的行程、还车确认、报销申请（油费/路桥费）。\n\n• 管理端（PC端为主）：\n  - 车辆档案库、驾驶员管理、车辆实时状态监控、派车调度、保险/维保提醒。\n\n• 决策端：\n  - 车辆利用率报表、费用分析统计。`,
           timestamp: new Date().toISOString(),
         }
       } else if (nextStep === 3) {
         aiResponse = {
           id: 'ai-analysis-3',
           role: 'assistant',
-          content: `• 收到，已记录核心功能需求。\n\n• 根据您的描述，识别出以下关键功能：\na. 统一认证：单点登录（SSO）、多因素认证\nb. 业务中心：审批待办、业务申请流程、知识查询\nc. 数据展示：个人工作台、数据看板、报表中心\nd. 协作功能：消息通知、日程管理、任务协作\n\n• 最后，请确认一下技术约束条件，例如：\na. 是否要求国产化适配（如华为云、达梦数据库）？\nb. 是否已有技术栈要求？\nc. 交付时间要求？`,
+          content: `• 好的，这是为您设计的字段清单：\n\n• 车辆档案表：\n  - 车牌号（唯一）、车型、车架号、载人数、购入日期、所属部门、当前状态（空闲/使用中/维修中）、保险到期日。\n\n• 用车申请单：\n  - 申请人（关联用户）、用车部门、目的地、用车时间（起/止）、随行人数、申请理由、车辆类型要求、预估里程。`,
           timestamp: new Date().toISOString(),
         }
       } else {
@@ -202,9 +337,17 @@ export function AICollectionPage() {
 
         setTimeout(() => {
           setDocGenerated(true)
+          if (isAfterConfirmation) {
+            setDocVersions(prev => prev.map(v => {
+              if (v.version === selectedVersion && !v.confirmed) {
+                return { ...v, docContent: sampleDocContent }
+              }
+              return v
+            }))
+          }
           const newRequirement = {
             id: Date.now().toString(),
-            name: content.slice(0, 20) + '...',
+            name: firstUserInput || content,
             status: 'draft' as const,
             docContent: sampleDocContent,
             createdAt: new Date().toISOString(),
@@ -220,15 +363,42 @@ export function AICollectionPage() {
   }
 
   const handleConfirmRequirement = () => {
+    setDocVersions(prev => {
+      const updated = prev.map(v => {
+        if (v.version === selectedVersion) {
+          return { ...v, confirmed: true }
+        }
+        return v
+      })
+      return updated
+    })
     setRequirementConfirmed(true)
   }
 
   const handleGeneratePPT = () => {
+    setDocVersions(prev => {
+      const updated = prev.map(v => {
+        if (v.version === selectedVersion && v.confirmed) {
+          return { ...v, pptUrl: '/mock/ppt.pptx' }
+        }
+        return v
+      })
+      return updated
+    })
     setPptGenerated(true)
     setActiveTab('ppt')
   }
 
   const handleGeneratePrototype = () => {
+    setDocVersions(prev => {
+      const updated = prev.map(v => {
+        if (v.version === selectedVersion && v.confirmed) {
+          return { ...v, prototypeUrl: '/mock/prototype' }
+        }
+        return v
+      })
+      return updated
+    })
     setPrototypeGenerated(true)
     setActiveTab('prototype')
   }
@@ -329,7 +499,7 @@ export function AICollectionPage() {
                 </div>
               </div>
               <ChatInput
-                onSend={(message) => handleStartChat(message)}
+                onSend={(message) => handleStartChat(undefined, message)}
                 disabled={false}
               />
             </div>
@@ -371,48 +541,24 @@ export function AICollectionPage() {
                         id="version-menu"
                         className="absolute left-0 top-full mt-1 bg-white rounded-lg shadow-lg border border-gray-100 py-1 hidden z-10 min-w-[80px]"
                       >
-                        <button
-                          onClick={() => {
-                            setSelectedVersion('V1.0')
-                            const menu = document.getElementById('version-menu')
-                            if (menu) {
-                              menu.classList.add('hidden')
-                            }
-                          }}
-                          className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 ${
-                            selectedVersion === 'V1.0' ? 'text-primary bg-blue-50' : 'text-gray-700'
-                          }`}
-                        >
-                          V1.0
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSelectedVersion('V2.0')
-                            const menu = document.getElementById('version-menu')
-                            if (menu) {
-                              menu.classList.add('hidden')
-                            }
-                          }}
-                          className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 ${
-                            selectedVersion === 'V2.0' ? 'text-primary bg-blue-50' : 'text-gray-700'
-                          }`}
-                        >
-                          V2.0
-                        </button>
-                        <button
-                          onClick={() => {
-                            setSelectedVersion('V3.0')
-                            const menu = document.getElementById('version-menu')
-                            if (menu) {
-                              menu.classList.add('hidden')
-                            }
-                          }}
-                          className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 ${
-                            selectedVersion === 'V3.0' ? 'text-primary bg-blue-50' : 'text-gray-700'
-                          }`}
-                        >
-                          V3.0
-                        </button>
+                        {docVersions.map((version) => (
+                          <button
+                            key={version.version}
+                            onClick={() => {
+                              setSelectedVersion(version.version)
+                              const menu = document.getElementById('version-menu')
+                              if (menu) {
+                                menu.classList.add('hidden')
+                              }
+                            }}
+                            className={`w-full px-4 py-2 text-left text-sm hover:bg-gray-50 ${
+                              selectedVersion === version.version ? 'text-primary bg-blue-50' : 'text-gray-700'
+                            }`}
+                          >
+                            {version.version}
+                            {version.confirmed && ' ✓'}
+                          </button>
+                        ))}
                       </div>
                     </div>
                     <div className="h-4 w-px bg-gray-300" />
@@ -456,9 +602,9 @@ export function AICollectionPage() {
                 </div>
 
                 <div className="flex-1 overflow-hidden">
-                  {activeTab === 'document' && <DocPreview content={docContent} />}
-                  {activeTab === 'ppt' && pptGenerated && <PPTPreview pptUrl={pptUrl || '/mock/ppt.pptx'} />}
-                  {activeTab === 'prototype' && prototypeGenerated && <PrototypePreview prototypeUrl={prototypeUrl || '/mock/prototype'} />}
+                  {activeTab === 'document' && <DocPreview content={currentVersion.docContent} />}
+                  {activeTab === 'ppt' && pptGenerated && <PPTPreview pptUrl={currentVersion.pptUrl || '/mock/ppt.pptx'} />}
+                  {activeTab === 'prototype' && prototypeGenerated && <PrototypePreview prototypeUrl={currentVersion.prototypeUrl || '/mock/prototype'} />}
                 </div>
               </div>
             </>

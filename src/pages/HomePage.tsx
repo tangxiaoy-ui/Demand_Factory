@@ -1,43 +1,14 @@
-import { MessageSquare, FileText, Presentation, Users } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { PageLayout } from '@/components/layout/PageLayout'
-import { Banner } from '@/components/home/Banner'
-import { FeatureCard } from '@/components/home/FeatureCard'
-import { CaseCard } from '@/components/home/CaseCard'
-import { TestimonialCarousel } from '@/components/home/TestimonialCarousel'
-import { useCaseStore } from '@/stores/caseStore'
 import { useAuthStore } from '@/stores/authStore'
+import { TestimonialCarousel } from '@/components/home/TestimonialCarousel'
 import { mockTestimonials } from '@/mock/testimonials'
-
-const features = [
-  {
-    icon: <MessageSquare className="w-6 h-6" />,
-    title: 'AI智能需求收集',
-    description: '通过AI对话引导，智能收集需求信息，确保需求完整性和准确性。',
-  },
-  {
-    icon: <FileText className="w-6 h-6" />,
-    title: '一键生成文档',
-    description: '自动生成标准化需求文档，支持Markdown格式，易于编辑和分享。',
-  },
-  {
-    icon: <Presentation className="w-6 h-6" />,
-    title: '多格式产出',
-    description: '一键生成PPT演示文稿和交互原型，满足不同场景的汇报需求。',
-  },
-  {
-    icon: <Users className="w-6 h-6" />,
-    title: '开发协作闭环',
-    description: '无缝对接开发团队，需求状态实时同步，交付进度一目了然。',
-  },
-]
+import { Bot, FileText, Zap, ArrowRight } from 'lucide-react'
 
 export function HomePage() {
   const navigate = useNavigate()
-  const { cases } = useCaseStore()
   const { isLoggedIn } = useAuthStore()
-  const publishedCases = cases.filter(c => c.isPublished).slice(0, 6)
-  
+
   const handleExperience = () => {
     if (isLoggedIn) {
       navigate('/collection')
@@ -48,48 +19,198 @@ export function HomePage() {
 
   return (
     <PageLayout>
-      <Banner />
-
-      <section className="py-16 md:py-24 bg-bg-light">
+      {/* Hero Section */}
+      <section className="bg-white py-[46px]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">平台能力</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              需求工厂提供一站式需求管理解决方案，从需求收集到交付全流程覆盖
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {features.map((feature, index) => (
-              <FeatureCard key={index} {...feature} />
-            ))}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="space-y-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 rounded-full">
+                <span className="w-2 h-2 bg-primary rounded-full"></span>
+                <span className="text-sm font-medium text-primary">NEXT-GEN REQUIREMENT ENGINEERING</span>
+              </div>
+              
+              <div className="space-y-3">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight">
+                  大模型驱动的
+                </h1>
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary leading-tight">
+                  需求工程自动化平台
+                </h1>
+              </div>
+              
+              <p className="text-base text-gray-600 max-w-xl leading-relaxed">
+                告别繁琐的需求沟通。AI引导式澄清，自动生成专业PRD文档与高保真原型，让您的想法直接转化为可执行的产品方案。
+              </p>
+              
+              <div className="flex flex-wrap gap-4">
+                <button
+                  onClick={handleExperience}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white text-base font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-lg shadow-blue-200"
+                >
+                  立即开始体验
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={() => navigate('/cases')}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-white text-gray-700 text-base font-medium rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
+                >
+                  查看案例
+                </button>
+              </div>
+            </div>
+            
+            <div className="relative">
+              <div className="h-[400px] rounded-2xl overflow-hidden bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500">
+                <svg viewBox="0 0 400 400" className="w-full h-full">
+                  <defs>
+                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style={{ stopColor: '#60a5fa', stopOpacity: 0.8 }} />
+                      <stop offset="100%" style={{ stopColor: '#a78bfa', stopOpacity: 0.6 }} />
+                    </linearGradient>
+                    <linearGradient id="grad2" x1="0%" y1="100%" x2="100%" y2="0%">
+                      <stop offset="0%" style={{ stopColor: '#f472b6', stopOpacity: 0.7 }} />
+                      <stop offset="100%" style={{ stopColor: '#fb7185', stopOpacity: 0.5 }} />
+                    </linearGradient>
+                  </defs>
+                  <polygon points="50,100 150,50 200,150 100,200" fill="url(#grad1)" opacity="0.8" />
+                  <polygon points="200,50 350,100 300,200 150,150" fill="url(#grad2)" opacity="0.7" />
+                  <polygon points="100,200 250,180 300,300 150,320" fill="url(#grad1)" opacity="0.6" />
+                  <polygon points="250,180 380,150 350,280 300,300" fill="url(#grad2)" opacity="0.5" />
+                  <polygon points="50,250 150,220 200,350 100,380" fill="url(#grad1)" opacity="0.7" />
+                  <polygon points="200,350 320,320 350,380 250,400" fill="url(#grad2)" opacity="0.6" />
+                  <circle cx="320" cy="80" r="40" fill="rgba(255,255,255,0.2)" />
+                  <circle cx="80" cy="320" r="30" fill="rgba(255,255,255,0.15)" />
+                  <ellipse cx="200" cy="200" rx="60" ry="40" fill="rgba(255,255,255,0.1)" transform="rotate(30 200 200)" />
+                </svg>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="py-16 md:py-24 bg-white">
+      {/* Features Section */}
+      <section className="bg-[#F4F2FE] py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">客户案例</h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">重新定义需求流转效率</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              来自各行各业的成功案例，展示需求工厂的实际应用效果
+              基于深度学习的大语言模型，我们打造了闭环的智能需求工作流。
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {publishedCases.map((caseData) => (
-              <CaseCard key={caseData.id} caseData={caseData} />
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="bg-white rounded-xl p-8 shadow-sm hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-6">
+                <Bot className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">AI智能引导</h3>
+              <p className="text-gray-600 leading-relaxed">
+                不再需要填写复杂的表格。AI通过对话式访谈，精准捕捉用户场景与核心痛点，自动识别逻辑漏洞。
+              </p>
+            </div>
+
+            <div className="bg-white rounded-xl p-8 shadow-sm hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-6">
+                <FileText className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">自动化生成</h3>
+              <p className="text-gray-600 leading-relaxed">
+                一键生成标准PRD、User Story、流程图及交互原型。格式严格遵循行业标准，输出即为成品。
+              </p>
+            </div>
+
+            <div className="bg-white rounded-xl p-8 shadow-sm hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-6">
+                <Zap className="w-6 h-6 text-primary" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-3">快速交付</h3>
+              <p className="text-gray-600 leading-relaxed">
+                缩短产品开发前置时间达70%。支持导出为Markdown、PDF或同步至Jira、飞书等主流协作工具。
+              </p>
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="py-16 md:py-24 bg-bg-light">
+      {/* Process Section */}
+      <section className="bg-[#FBF8FF] py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-12">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">全流程透明协作</h2>
+              <p className="text-gray-600">
+                从灵感闪现到方案落地，每一步都有迹可循，让团队协作从未如此简单。
+              </p>
+            </div>
+            <div className="flex gap-6 mt-4 md:mt-0">
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 bg-primary rounded-full"></span>
+                <span className="text-sm font-medium text-gray-700">COMPLETED</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 border-2 border-gray-400 rounded-full"></span>
+                <span className="text-sm font-medium text-gray-700">IN PROGRESS</span>
+              </div>
+            </div>
+          </div>
+
+          <div className="relative">
+            <div className="hidden md:block absolute top-8 left-0 right-0 h-0.5 bg-gray-200">
+              <div className="absolute left-0 top-0 h-full w-1/4 bg-primary"></div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+              <div className="relative">
+                <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-blue-200">
+                  <span className="text-2xl font-bold text-white">1</span>
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">提交想法</h3>
+                <p className="text-gray-600 text-sm">
+                  输入一句话原始需求或上传会议纪要录音。
+                </p>
+              </div>
+
+              <div className="relative">
+                <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-blue-200">
+                  <span className="text-2xl font-bold text-white">2</span>
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">AI澄清</h3>
+                <p className="text-gray-600 text-sm">
+                  智能引擎主动提问，补充边界条件与技术约束。
+                </p>
+              </div>
+
+              <div className="relative">
+                <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-blue-200">
+                  <span className="text-2xl font-bold text-white">3</span>
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">生成文档</h3>
+                <p className="text-gray-600 text-sm">
+                  秒级输出全套产品文档与高保真交互蓝图。
+                </p>
+              </div>
+
+              <div className="relative">
+                <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center mb-6 shadow-lg shadow-blue-200">
+                  <span className="text-2xl font-bold text-white">4</span>
+                </div>
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">交付成果</h3>
+                <p className="text-gray-600 text-sm">
+                  团队评审并确认，直接推送至研发待办清单。
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="bg-[#F4F2FE] py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">客户声音</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
-              听听使用需求工厂的客户怎么说
+              来自 5,000+ 产品团队的真实反馈
             </p>
           </div>
 
@@ -97,29 +218,32 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="py-20 md:py-32 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-8">
-            准备好升级您的生产力了吗？
-          </h2>
-          <button
-            onClick={handleExperience}
-            className="px-8 py-3 bg-primary text-white text-base font-medium rounded-lg hover:bg-blue-600 transition-colors mb-4"
-          >
-            立即开始免费试用
-          </button>
-          <div className="mt-4">
-            <button
-              onClick={() => navigate('/cases')}
-              className="text-gray-500 text-sm hover:text-gray-700 transition-colors inline-flex items-center"
-            >
-              或预约专家演示
-              <span className="ml-1">→</span>
-            </button>
+      {/* CTA Section */}
+      <section className="bg-primary py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+            <div className="space-y-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-white leading-tight">
+                准备好将生产力<br />
+                提升一个数量级了吗？
+              </h2>
+              <p className="text-blue-100 text-lg">
+                加入 5,000+ 领先产品团队，立即开启您的智能研发之旅。
+              </p>
+            </div>
+            <div className="flex flex-col items-start gap-4">
+              <button
+                onClick={handleExperience}
+                className="px-8 py-4 bg-white text-primary text-base font-medium rounded-lg hover:bg-gray-100 transition-colors shadow-lg"
+              >
+                立即体验
+              </button>
+            </div>
           </div>
         </div>
       </section>
 
+      {/* Footer */}
       <footer className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
