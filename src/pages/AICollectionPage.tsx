@@ -495,7 +495,7 @@ export function AICollectionPage() {
           </div>
         </header>
 
-        <div className={`flex-1 flex ${docGenerated ? '' : 'justify-center items-center'} overflow-hidden`}>
+        <div className={`flex-1 flex py-5 ${docGenerated ? '' : 'justify-center items-center'} overflow-hidden`}>
           {!docGenerated && pageState === 'initial' ? (
             <div className="w-full max-w-3xl mx-4 h-full bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col">
               <div className="flex-1 overflow-y-auto p-4 flex flex-col items-center justify-center">
