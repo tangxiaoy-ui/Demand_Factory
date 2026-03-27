@@ -125,7 +125,8 @@ export function AICollectionPage() {
   const [firstUserInput, setFirstUserInput] = useState('')
 
   const sessionId = searchParams.get('sessionId')
-  const requirementId = searchParams.get('requirementId')
+  const requirementId = searchParams.get('id')
+  const mode = searchParams.get('mode')
 
   const currentVersion = docVersions.find(v => v.version === selectedVersion) || docVersions[0]
 
@@ -185,25 +186,42 @@ export function AICollectionPage() {
     if (requirementId) {
       const requirement = requirements.find(r => r.id === requirementId)
       if (requirement) {
-        setDocVersions([
-          {
-            version: 'V1.0',
-            docContent: requirement.docContent || sampleDocContent,
-            confirmed: requirement.status === 'confirmed',
-            pptUrl: requirement.pptUrl,
-            prototypeUrl: requirement.prototypeUrl,
-            createdAt: Date.now()
-          }
-        ])
+        const newDocVersion = {
+          version: 'V1.0',
+          docContent: requirement.docContent || sampleDocContent,
+          confirmed: requirement.status === 'confirmed',
+          pptUrl: requirement.pptUrl,
+          prototypeUrl: requirement.prototypeUrl,
+          createdAt: Date.now()
+        }
+        
+        setDocVersions([newDocVersion])
+        
         if (requirement.pptUrl) {
           setPptGenerated(true)
         }
         if (requirement.prototypeUrl) {
           setPrototypeGenerated(true)
         }
+        
+        // 补充需求模式：直接进入聊天状态
+        if (mode === 'supplement') {
+          setPageState('chatting')
+          setDocGenerated(true)
+          setProgress(100)
+          
+          // 添加补充需求的提示消息
+          const supplementMessage: Message = {
+            id: `supplement-${Date.now()}`,
+            role: 'assistant',
+            content: `正在为需求「${requirement.name}」补充内容。您可以提出新的需求或修改建议，我会帮您更新文档。`,
+            timestamp: new Date().toISOString(),
+          }
+          setMessages([supplementMessage])
+        }
       }
     }
-  }, [sessionId, requirementId, sessions, requirements, setMessages, setProgress, setDocGenerated])
+  }, [sessionId, requirementId, mode, sessions, requirements, setMessages, setProgress, setDocGenerated])
 
   const handleStartChat = (quickCategory?: string, firstMessage?: string) => {
     setPageState('chatting')
@@ -461,6 +479,8 @@ export function AICollectionPage() {
               onClick={() => {
                 if (isHistorySession && requirementId) {
                   navigate(`/requirements/${requirementId}`)
+                } else if (mode === 'supplement' && requirementId) {
+                  navigate(`/requirements/${requirementId}`)
                 } else {
                   navigate('/')
                 }
@@ -468,7 +488,7 @@ export function AICollectionPage() {
               className="flex items-center space-x-2 text-gray-600 hover:text-primary transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
-              <span>{isHistorySession ? '返回需求详情' : '返回首页'}</span>
+              <span>{isHistorySession || mode === 'supplement' ? '返回需求详情' : '返回首页'}</span>
             </button>
             <h1 className="text-lg font-semibold text-gray-900">AI需求收集</h1>
             <div className="w-20" />

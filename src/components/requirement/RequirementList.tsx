@@ -65,6 +65,10 @@ export function RequirementList() {
     navigate(`/collection?id=${id}`)
   }
 
+  const handleSupplement = (id: string) => {
+    navigate(`/collection?id=${id}&mode=supplement`)
+  }
+
   const handleDelete = (id: string) => {
     if (confirm('确认删除该需求？')) {
       deleteRequirement(id)
@@ -101,6 +105,18 @@ export function RequirementList() {
 
     switch (req.status) {
       case 'draft':
+        buttons.push(
+          <button
+            key="supplement"
+            onClick={(e) => {
+              e.stopPropagation()
+              handleSupplement(req.id)
+            }}
+            className="text-primary text-sm mr-3"
+          >
+            补充需求
+          </button>
+        )
         buttons.push(
           <button
             key="edit"
