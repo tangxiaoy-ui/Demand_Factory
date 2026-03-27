@@ -209,9 +209,7 @@ export function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">客户声音</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              来自 5,000+ 产品团队的真实反馈
-            </p>
+            <p className="text-gray-600 max-w-2xl mx-auto">来自 5,000+ 产品团队的真实反馈</p>
           </div>
 
           <TestimonialCarousel testimonials={mockTestimonials} />

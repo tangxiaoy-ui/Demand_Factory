@@ -1,25 +1,40 @@
-import type { Testimonial } from '@/types'
+import type { Testimonial } from '@/components/home/TestimonialCarousel'
 
 export const mockTestimonials: Testimonial[] = [
   {
-    id: '1',
-    content: '需求工厂大大提高了我们团队的需求整理效率，从原来的一周缩短到一天。AI助手很智能，能够引导我们完善需求细节。',
-    userName: '张明',
-    company: '科技有限公司',
-    position: '产品总监',
+    id: 'testimonial-1',
+    name: '李娜',
+    title: '产品副总裁',
+    company: '星云数科',
+    quote:
+      '以前一次需求澄清要经历3-4轮会议，现在团队直接在平台里完成对话、确认文档、导出原型，交付效率提升了近一倍。',
+    result: '交付周期缩短 45%',
   },
   {
-    id: '2',
-    content: '自动生成的需求文档和原型非常专业，节省了大量时间。特别是PPT功能，汇报时效果很好。',
-    userName: '李婷',
-    company: '创新软件',
-    position: '项目经理',
+    id: 'testimonial-2',
+    name: 'Andrew Chen',
+    title: 'Head of Engineering',
+    company: 'Nova Robotics',
+    quote:
+      '大模型自动生成的PRD细致到字段级别，研发在 Jira 里就能直接拆任务。我们再也不担心需求缺漏。',
+    result: '需求返工率下降 60%',
   },
   {
-    id: '3',
-    content: '平台的需求管理功能很实用，可以追踪需求从创建到交付的全流程。推荐给所有需要规范化需求管理的团队。',
-    userName: '王强',
-    company: '数据科技',
-    position: '研发负责人',
+    id: 'testimonial-3',
+    name: '王凯',
+    title: 'PMO负责人',
+    company: '澜峰能源',
+    quote:
+      '把过往方案导入做参考，AI可以给出更有经验的建议。客户演示中一键导出PPT直接过稿。',
+    result: '售前转化率提升 32%',
+  },
+  {
+    id: 'testimonial-4',
+    name: '陈璐',
+    title: '高级产品经理',
+    company: 'Atlas Cloud',
+    quote:
+      '跨部门评审时，聊天记录+生成文档一目了然，大家关注点统一，讨论效率高很多。',
+    result: '评审时间减少 3 天',
   },
 ]
