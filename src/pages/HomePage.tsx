@@ -2,7 +2,9 @@ import { useNavigate } from 'react-router-dom'
 import { PageLayout } from '@/components/layout/PageLayout'
 import { useAuthStore } from '@/stores/authStore'
 import { TestimonialCarousel } from '@/components/home/TestimonialCarousel'
+import { CaseCard } from '@/components/home/CaseCard'
 import { mockTestimonials } from '@/mock/testimonials'
+import { mockCases } from '@/mock/cases'
 import { Bot, FileText, Zap, ArrowRight } from 'lucide-react'
 
 export function HomePage() {
@@ -204,8 +206,33 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
+      {/* Featured Cases Section */}
       <section className="bg-[#F4F2FE] py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-12">
+            <div>
+              <h2 className="text-3xl font-bold text-gray-900 mb-2">精选案例</h2>
+              <p className="text-gray-600">来自后台管理推荐的优秀项目案例</p>
+            </div>
+            <button
+              onClick={() => navigate('/cases')}
+              className="mt-4 md:mt-0 inline-flex items-center gap-2 text-primary font-medium hover:text-blue-700 transition-colors"
+            >
+              查看全部案例
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {mockCases.slice(0, 4).map((caseData) => (
+              <CaseCard key={caseData.id} caseData={caseData} />
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="bg-[#FBF8FF] py-16 md:py-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">客户声音</h2>
