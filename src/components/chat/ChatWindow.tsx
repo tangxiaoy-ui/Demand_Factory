@@ -25,7 +25,7 @@ const mockStructuredResponses: Record<string, MessageWithMeta> = {
       timestamp: new Date().toISOString(),
     },
     isStructuredAI: true,
-    analysisTitle: '车辆管理需求解析',
+    analysisTitle: '需求解析',
     progress: '分析进度0%',
   },
   'ai-analysis-2': {
@@ -36,7 +36,7 @@ const mockStructuredResponses: Record<string, MessageWithMeta> = {
       timestamp: new Date().toISOString(),
     },
     isStructuredAI: true,
-    analysisTitle: '车辆管理需求解析',
+    analysisTitle: '需求解析',
     progress: '分析进度30%',
   },
   'ai-analysis-3': {
@@ -47,7 +47,7 @@ const mockStructuredResponses: Record<string, MessageWithMeta> = {
       timestamp: new Date().toISOString(),
     },
     isStructuredAI: true,
-    analysisTitle: '车辆管理需求解析',
+    analysisTitle: '需求解析',
     progress: '分析进度50%',
   },
   'ai-complete': {
