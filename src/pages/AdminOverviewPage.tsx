@@ -2,7 +2,7 @@ import { SidebarLayout } from '@/components/layout/SidebarLayout'
 import { Card } from '@/components/common/Card'
 import { useRequirementStore } from '@/stores/requirementStore'
 import { FileText, Clock, CheckCircle, AlertCircle } from 'lucide-react'
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts'
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid, BarChart, Bar } from 'recharts'
 
 const STATUS_COLORS = {
   draft: '#94a3b8',
@@ -11,6 +11,48 @@ const STATUS_COLORS = {
   developing: '#f97316',
   completed: '#22c55e',
   rejected: '#ef4444',
+}
+
+const TYPE_COLORS = {
+  web: '#3b82f6',
+  mobile: '#8b5cf6',
+  desktop: '#06b6d4',
+  system: '#f97316',
+  platform: '#22c55e',
+  other: '#94a3b8',
+}
+
+const TYPE_LABELS = {
+  web: 'Web应用',
+  mobile: '移动应用',
+  desktop: '桌面应用',
+  system: '管理系统',
+  platform: '平台型',
+  other: '其他',
+}
+
+const INDUSTRY_COLORS = {
+  finance: '#3b82f6',
+  education: '#22c55e',
+  logistics: '#f97316',
+  retail: '#ec4899',
+  healthcare: '#06b6d4',
+  manufacturing: '#8b5cf6',
+  government: '#ef4444',
+  internet: '#14b8a6',
+  other: '#94a3b8',
+}
+
+const INDUSTRY_LABELS = {
+  finance: '金融',
+  education: '教育',
+  logistics: '物流',
+  retail: '零售',
+  healthcare: '医疗',
+  manufacturing: '制造',
+  government: '政府',
+  internet: '互联网',
+  other: '其他',
 }
 
 export function AdminOverviewPage() {
@@ -30,6 +72,27 @@ export function AdminOverviewPage() {
     { name: '开发中', value: requirements.filter(r => r.status === 'developing').length, color: STATUS_COLORS.developing },
     { name: '已完成', value: stats.completed, color: STATUS_COLORS.completed },
     { name: '已拒绝', value: requirements.filter(r => r.status === 'rejected').length, color: STATUS_COLORS.rejected },
+  ].filter(item => item.value > 0)
+
+  const typeDistribution = [
+    { name: TYPE_LABELS.web, value: requirements.filter(r => r.type === 'web').length, color: TYPE_COLORS.web },
+    { name: TYPE_LABELS.mobile, value: requirements.filter(r => r.type === 'mobile').length, color: TYPE_COLORS.mobile },
+    { name: TYPE_LABELS.desktop, value: requirements.filter(r => r.type === 'desktop').length, color: TYPE_COLORS.desktop },
+    { name: TYPE_LABELS.system, value: requirements.filter(r => r.type === 'system').length, color: TYPE_COLORS.system },
+    { name: TYPE_LABELS.platform, value: requirements.filter(r => r.type === 'platform').length, color: TYPE_COLORS.platform },
+    { name: TYPE_LABELS.other, value: requirements.filter(r => r.type === 'other').length, color: TYPE_COLORS.other },
+  ].filter(item => item.value > 0)
+
+  const industryDistribution = [
+    { name: INDUSTRY_LABELS.finance, value: requirements.filter(r => r.industry === 'finance').length, color: INDUSTRY_COLORS.finance },
+    { name: INDUSTRY_LABELS.education, value: requirements.filter(r => r.industry === 'education').length, color: INDUSTRY_COLORS.education },
+    { name: INDUSTRY_LABELS.logistics, value: requirements.filter(r => r.industry === 'logistics').length, color: INDUSTRY_COLORS.logistics },
+    { name: INDUSTRY_LABELS.retail, value: requirements.filter(r => r.industry === 'retail').length, color: INDUSTRY_COLORS.retail },
+    { name: INDUSTRY_LABELS.healthcare, value: requirements.filter(r => r.industry === 'healthcare').length, color: INDUSTRY_COLORS.healthcare },
+    { name: INDUSTRY_LABELS.manufacturing, value: requirements.filter(r => r.industry === 'manufacturing').length, color: INDUSTRY_COLORS.manufacturing },
+    { name: INDUSTRY_LABELS.government, value: requirements.filter(r => r.industry === 'government').length, color: INDUSTRY_COLORS.government },
+    { name: INDUSTRY_LABELS.internet, value: requirements.filter(r => r.industry === 'internet').length, color: INDUSTRY_COLORS.internet },
+    { name: INDUSTRY_LABELS.other, value: requirements.filter(r => r.industry === 'other').length, color: INDUSTRY_COLORS.other },
   ].filter(item => item.value > 0)
 
   const getLast30DaysData = () => {
@@ -166,6 +229,54 @@ export function AdminOverviewPage() {
                   activeDot={{ r: 6 }}
                 />
               </LineChart>
+            </ResponsiveContainer>
+          </Card>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <Card className="p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">需求类型分布</h2>
+            <ResponsiveContainer width="100%" height={280}>
+              <BarChart data={typeDistribution}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis 
+                  dataKey="name" 
+                  tick={{ fontSize: 12 }}
+                  angle={0}
+                  textAnchor="middle"
+                />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="value" fill="#3b82f6">
+                  {typeDistribution.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </Card>
+
+          <Card className="p-6">
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">行业分布</h2>
+            <ResponsiveContainer width="100%" height={280}>
+              <PieChart>
+                <Pie
+                  data={industryDistribution}
+                  cx="50%"
+                  cy="50%"
+                  labelLine={false}
+                  label={({ name, percent }) => percent && percent > 0.05 ? `${name} ${(percent * 100).toFixed(0)}%` : ''}
+                  outerRadius={80}
+                  fill="#8884d8"
+                  dataKey="value"
+                >
+                  {industryDistribution.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </PieChart>
             </ResponsiveContainer>
           </Card>
         </div>

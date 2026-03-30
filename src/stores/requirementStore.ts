@@ -41,9 +41,9 @@ export const useRequirementStore = create<RequirementState>()(
     }),
     {
       name: 'requirement-storage',
-      version: 6,
+      version: 7,
       migrate: (persistedState: any, version: number) => {
-        if (version < 6) {
+        if (version < 7) {
           return {
             requirements: mockRequirements,
             currentRequirement: null,

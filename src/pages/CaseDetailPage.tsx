@@ -253,7 +253,7 @@ export function CaseDetailPage() {
   }
 
   const handleReuse = () => {
-    navigate('/collection')
+    navigate(`/collection?caseId=${id}&mode=reuse`)
   }
 
   const renderContent = () => {

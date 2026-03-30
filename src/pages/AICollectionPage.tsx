@@ -121,12 +121,13 @@ export function AICollectionPage() {
   ])
   const [selectedVersion, setSelectedVersion] = useState('V1.0')
   const [isHistorySession, setIsHistorySession] = useState(false)
-  const [isQuickEntry, setIsQuickEntry] = useState(false)
+const [isQuickEntry, setIsQuickEntry] = useState(false)
   const [firstUserInput, setFirstUserInput] = useState('')
-
+  
   const sessionId = searchParams.get('sessionId')
   const requirementId = searchParams.get('id')
   const mode = searchParams.get('mode')
+  const caseIdParam = searchParams.get('caseId')
 
   const currentVersion = docVersions.find(v => v.version === selectedVersion) || docVersions[0]
 
@@ -221,7 +222,26 @@ export function AICollectionPage() {
         }
       }
     }
-  }, [sessionId, requirementId, mode, sessions, requirements, setMessages, setProgress, setDocGenerated])
+
+    // 复用案例模式：直接进入状态四，左侧显示引导提示
+    if (caseIdParam && mode === 'reuse') {
+      setPageState('chatting')
+      setDocGenerated(true)
+      setPptGenerated(true)
+      setPrototypeGenerated(true)
+      setProgress(100)
+      setRequirementConfirmed(true)
+      
+      // 添加复用案例的引导消息
+      const reuseMessage: Message = {
+        id: `reuse-${Date.now()}`,
+        role: 'assistant',
+        content: '已为你复用此案例，你可以在此对话调整需求以符合贵公司业务。',
+        timestamp: new Date().toISOString(),
+      }
+      setMessages([reuseMessage])
+    }
+  }, [sessionId, requirementId, mode, caseIdParam, sessions, requirements, setMessages, setProgress, setDocGenerated])
 
   const handleStartChat = (quickCategory?: string, firstMessage?: string) => {
     setPageState('chatting')
@@ -367,6 +387,8 @@ export function AICollectionPage() {
             id: Date.now().toString(),
             name: firstUserInput || content,
             status: 'draft' as const,
+            type: 'web' as const,
+            industry: 'other' as const,
             docContent: sampleDocContent,
             createdAt: new Date().toISOString(),
             updatedAt: new Date().toISOString(),
@@ -481,6 +503,8 @@ export function AICollectionPage() {
                   navigate(`/requirements/${requirementId}`)
                 } else if (mode === 'supplement' && requirementId) {
                   navigate(`/requirements/${requirementId}`)
+                } else if (mode === 'reuse' && caseIdParam) {
+                  navigate(`/cases/${caseIdParam}`)
                 } else {
                   navigate('/')
                 }
@@ -488,7 +512,7 @@ export function AICollectionPage() {
               className="flex items-center space-x-2 text-gray-600 hover:text-primary transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
-              <span>{isHistorySession || mode === 'supplement' ? '返回需求详情' : '返回首页'}</span>
+              <span>{isHistorySession || mode === 'supplement' ? '返回需求详情' : mode === 'reuse' ? '返回案例详情' : '返回首页'}</span>
             </button>
             <h1 className="text-lg font-semibold text-gray-900">AI需求收集</h1>
             <div className="w-20" />

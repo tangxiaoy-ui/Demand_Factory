@@ -8,10 +8,25 @@ export interface User {
 
 export type RequirementStatus = 'draft' | 'confirmed' | 'submitted' | 'developing' | 'completed' | 'rejected'
 
+export type RequirementType = 'web' | 'mobile' | 'desktop' | 'system' | 'platform' | 'other'
+
+export type IndustryType = 
+  | 'finance'
+  | 'education'
+  | 'logistics'
+  | 'retail'
+  | 'healthcare'
+  | 'manufacturing'
+  | 'government'
+  | 'internet'
+  | 'other'
+
 export interface Requirement {
   id: string
   name: string
   status: RequirementStatus
+  type: RequirementType
+  industry: IndustryType
   docContent: string
   pptUrl?: string
   prototypeUrl?: string

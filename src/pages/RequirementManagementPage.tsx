@@ -24,7 +24,7 @@ export function RequirementManagementPage() {
   const navigate = useNavigate()
   const { requirements, deleteRequirement, updateRequirement } = useRequirementStore()
   const [search, setSearch] = useState('')
-  const [statusFilter, setStatusFilter] = useState<RequirementStatus | 'all'>('submitted')
+  const [statusFilter, setStatusFilter] = useState<RequirementStatus | 'all'>('all')
   const [customerFilter, setCustomerFilter] = useState<string>('all')
   const [showFilters, setShowFilters] = useState(false)
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false)
@@ -33,10 +33,10 @@ export function RequirementManagementPage() {
   const uniqueCustomers = Array.from(new Set(requirements.map((req) => req.customer).filter(Boolean)))
 
   const statusTabs = [
+    { value: 'all' as const, label: '全部', count: requirements.length },
     { value: 'submitted' as const, label: '待审核', count: requirements.filter(r => r.status === 'submitted').length },
     { value: 'developing' as const, label: '开发中', count: requirements.filter(r => r.status === 'developing').length },
     { value: 'completed' as const, label: '已完成', count: requirements.filter(r => r.status === 'completed').length },
-    { value: 'all' as const, label: '全部', count: requirements.length },
   ]
 
   const filteredRequirements = requirements

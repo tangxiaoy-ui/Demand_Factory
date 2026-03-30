@@ -5,6 +5,8 @@ export const mockRequirements: Requirement[] = [
     id: '0',
     name: '智能客服系统',
     status: 'rejected',
+    type: 'platform',
+    industry: 'internet',
     docContent: `# 智能客服系统需求文档
 
 ## 项目概述
@@ -26,6 +28,8 @@ export const mockRequirements: Requirement[] = [
     id: '6',
     name: '移动端支付系统',
     status: 'draft',
+    type: 'mobile',
+    industry: 'finance',
     docContent: `# 移动端支付系统需求文档
 
 ## 项目概述
@@ -59,6 +63,8 @@ export const mockRequirements: Requirement[] = [
     id: '1',
     name: '智能物流系统',
     status: 'confirmed',
+    type: 'system',
+    industry: 'logistics',
     docContent: `# 智能物流系统需求文档
 
 ## 项目概述
@@ -80,6 +86,8 @@ export const mockRequirements: Requirement[] = [
     id: '3',
     name: 'CRM客户管理系统',
     status: 'submitted',
+    type: 'web',
+    industry: 'internet',
     docContent: `# CRM客户管理系统需求文档
 
 ## 项目概述
@@ -108,6 +116,8 @@ export const mockRequirements: Requirement[] = [
     id: '4',
     name: '车辆管理系统',
     status: 'developing',
+    type: 'system',
+    industry: 'logistics',
     docContent: `# 车辆管理系统需求文档
 
 ## 项目概述
@@ -178,6 +188,8 @@ export const mockRequirements: Requirement[] = [
     id: '5',
     name: '在线教育平台',
     status: 'completed',
+    type: 'platform',
+    industry: 'education',
     docContent: `# 在线教育平台需求文档
 
 ## 项目概述
