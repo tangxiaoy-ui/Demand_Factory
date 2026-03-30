@@ -100,7 +100,7 @@ const sampleDocContent = `# 车辆管理系统需求文档
 export function AICollectionPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const { isLoggedIn } = useAuthStore()
+  const { isLoggedIn, openLoginModal } = useAuthStore()
   const { messages, addMessage, setMessages, setProgress, setDocGenerated, docGenerated } = useChatStore()
   const { addRequirement, requirements } = useRequirementStore()
   const { sessions } = useHistoryStore()
@@ -162,9 +162,9 @@ const [isQuickEntry, setIsQuickEntry] = useState(false)
 
   useEffect(() => {
     if (!isLoggedIn) {
-      navigate('/login')
+      openLoginModal('/collection')
     }
-  }, [isLoggedIn, navigate])
+  }, [isLoggedIn, openLoginModal])
 
   useEffect(() => {
     if (sessionId) {

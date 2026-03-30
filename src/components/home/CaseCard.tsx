@@ -1,4 +1,5 @@
 import { Badge } from '@/components/common/Badge'
+import { useAuthStore } from '@/stores/authStore'
 import type { Case } from '@/types'
 
 interface CaseCardProps {
@@ -6,8 +7,14 @@ interface CaseCardProps {
 }
 
 export function CaseCard({ caseData }: CaseCardProps) {
+  const { isLoggedIn, openLoginModal } = useAuthStore()
+
   const handleClick = () => {
-    window.open(`/cases/${caseData.id}`, '_blank')
+    if (isLoggedIn) {
+      window.open(`/cases/${caseData.id}`, '_blank')
+    } else {
+      openLoginModal(`/cases/${caseData.id}`)
+    }
   }
 
   return (

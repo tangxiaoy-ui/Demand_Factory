@@ -6,7 +6,7 @@ import { useAuthStore } from '@/stores/authStore'
 export function Navbar() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { user, isLoggedIn, logout } = useAuthStore()
+  const { user, isLoggedIn, logout, openLoginModal } = useAuthStore()
   const [showDropdown, setShowDropdown] = useState(false)
 
   const isActive = (path: string) => {
@@ -103,12 +103,12 @@ export function Navbar() {
                 )}
               </div>
             ) : (
-              <Link
-                to="/login"
+              <button
+                onClick={() => openLoginModal('/')}
                 className="px-4 py-2 bg-primary text-white rounded-md hover:bg-blue-600 transition-colors"
               >
                 登录
-              </Link>
+              </button>
             )}
             </div>
           </div>

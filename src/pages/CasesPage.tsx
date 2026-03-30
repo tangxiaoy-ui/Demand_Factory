@@ -4,9 +4,11 @@ import { PageLayout } from '@/components/layout/PageLayout'
 import { CaseCard } from '@/components/home/CaseCard'
 import { industryOptions, scaleOptions, tagOptions } from '@/mock/cases'
 import { useCaseStore } from '@/stores/caseStore'
+import { useAuthStore } from '@/stores/authStore'
 
 export function CasesPage() {
   const { cases } = useCaseStore()
+  const { isLoggedIn, openLoginModal } = useAuthStore()
   const [search, setSearch] = useState('')
   const [industryFilter, setIndustryFilter] = useState('all')
   const [scaleFilter, setScaleFilter] = useState('all')
@@ -172,12 +174,18 @@ export function CasesPage() {
             </div>
           ) : (
             <div className="space-y-4">
-              {filteredCases.map((caseData) => (
-                <div
-                  key={caseData.id}
-                  onClick={() => window.open(`/cases/${caseData.id}`, '_blank')}
-                  className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all cursor-pointer flex gap-4"
-                >
+{filteredCases.map((caseData) => (
+                 <div
+                   key={caseData.id}
+                   onClick={() => {
+                     if (isLoggedIn) {
+                       window.open(`/cases/${caseData.id}`, '_blank')
+                     } else {
+                       openLoginModal(`/cases/${caseData.id}`)
+                     }
+                   }}
+                   className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-all cursor-pointer flex gap-4"
+                 >
                   <div className="w-48 h-32 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0">
                     <img
                       src={caseData.thumbnail}

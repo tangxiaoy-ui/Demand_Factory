@@ -7,13 +7,13 @@ import { Bot, FileText, Zap, ArrowRight } from 'lucide-react'
 
 export function HomePage() {
   const navigate = useNavigate()
-  const { isLoggedIn } = useAuthStore()
+  const { isLoggedIn, openLoginModal } = useAuthStore()
 
   const handleExperience = () => {
     if (isLoggedIn) {
       navigate('/collection')
     } else {
-      navigate('/login?redirect=/collection')
+      openLoginModal('/collection')
     }
   }
 

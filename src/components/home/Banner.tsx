@@ -37,7 +37,8 @@ export function Banner() {
     if (isLoggedIn) {
       navigate('/collection')
     } else {
-      navigate('/login?redirect=/collection')
+      const store = useAuthStore.getState()
+      store.openLoginModal('/collection')
     }
   }
 

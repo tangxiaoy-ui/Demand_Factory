@@ -1,22 +1,28 @@
-import { useState } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
-import { QrCode, Smartphone } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { X, QrCode, Smartphone } from 'lucide-react'
 import { Button } from '@/components/common/Button'
 import { Input } from '@/components/common/Input'
 import { useAuthStore } from '@/stores/authStore'
 
 type LoginTab = 'wechat' | 'mobile'
 
-export function LoginPage() {
+export function LoginModal() {
   const navigate = useNavigate()
-  const [searchParams] = useSearchParams()
-  const { login } = useAuthStore()
+  const { showLoginModal, loginRedirect, login, closeLoginModal } = useAuthStore()
   const [activeTab, setActiveTab] = useState<LoginTab>('wechat')
   const [mobile, setMobile] = useState('')
   const [code, setCode] = useState('')
   const [countdown, setCountdown] = useState(0)
 
-  const redirectPath = searchParams.get('redirect') || '/'
+  useEffect(() => {
+    if (!showLoginModal) {
+      setActiveTab('wechat')
+      setMobile('')
+      setCode('')
+      setCountdown(0)
+    }
+  }, [showLoginModal])
 
   const handleWechatLogin = () => {
     login({
@@ -24,7 +30,9 @@ export function LoginPage() {
       name: '测试用户',
       role: 'user',
     })
-    navigate(redirectPath)
+    if (loginRedirect) {
+      navigate(loginRedirect)
+    }
   }
 
   const handleMobileLogin = () => {
@@ -35,7 +43,9 @@ export function LoginPage() {
         mobile,
         role: 'user',
       })
-      navigate(redirectPath)
+      if (loginRedirect) {
+        navigate(loginRedirect)
+      }
     }
   }
 
@@ -54,23 +64,22 @@ export function LoginPage() {
     }
   }
 
-  return (
-    <div className="min-h-screen flex">
-      <div className="hidden lg:flex lg:w-3/5 bg-gradient-to-br from-primary to-blue-700 items-center justify-center p-12">
-        <div className="text-center text-white">
-          <div className="w-20 h-20 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-8">
-            <span className="text-4xl font-bold">需</span>
-          </div>
-          <h1 className="text-4xl font-bold mb-4">需求工厂</h1>
-          <p className="text-xl opacity-90 mb-2">智能生成需求文档与原型</p>
-          <p className="text-lg opacity-70">从需求到交付，一站式协作平台</p>
-        </div>
-      </div>
+  if (!showLoginModal) return null
 
-      <div className="w-full lg:w-2/5 flex items-center justify-center p-8 bg-white">
-        <div className="w-full max-w-md">
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/50" onClick={closeLoginModal} />
+      <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-md mx-4 overflow-hidden">
+        <button
+          onClick={closeLoginModal}
+          className="absolute top-4 right-4 p-1 text-gray-400 hover:text-gray-600 transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        <div className="p-8">
           <div className="text-center mb-8">
-            <div className="lg:hidden w-12 h-12 bg-primary rounded-xl flex items-center justify-center mx-auto mb-4">
+            <div className="w-12 h-12 bg-primary rounded-xl flex items-center justify-center mx-auto mb-4">
               <span className="text-white text-2xl font-bold">需</span>
             </div>
             <h2 className="text-2xl font-bold text-gray-900">欢迎登录</h2>

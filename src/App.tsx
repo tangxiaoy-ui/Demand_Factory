@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { useEffect } from 'react'
 import { HomePage } from '@/pages/HomePage'
-import { LoginPage } from '@/pages/LoginPage'
 import { AICollectionPage } from '@/pages/AICollectionPage'
 import { RequirementsPage } from '@/pages/RequirementsPage'
 import { RequirementDetailPage } from '@/pages/RequirementDetailPage'
@@ -11,6 +10,7 @@ import { AdminSettingsPage } from '@/pages/AdminSettingsPage'
 import { AdminCasesPage } from '@/pages/AdminCasesPage'
 import { CasesPage } from '@/pages/CasesPage'
 import { CaseDetailPage } from '@/pages/CaseDetailPage'
+import { LoginModal } from '@/components/common/LoginModal'
 import { useHistoryStore } from '@/stores/historyStore'
 import { mockHistorySessions } from '@/mock/historySessions'
 
@@ -33,9 +33,9 @@ function App() {
 
   return (
     <Router>
+      <LoginModal />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
         <Route path="/collection" element={<AICollectionPage />} />
         <Route path="/requirements" element={<RequirementsPage />} />
         <Route path="/requirements/:id" element={<RequirementDetailPage />} />
